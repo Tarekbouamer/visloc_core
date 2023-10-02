@@ -26,8 +26,8 @@ def load_pretrained(model, variant, pretrained_cfg, state_key=None, replace=None
 
     #
     pretrained_file = pretrained_cfg.get('file',  None)
-    pretrained_url = pretrained_cfg.get('url',   None)
-    pretrained_drive = pretrained_cfg.get('drive', None)
+    pretrained_url  = pretrained_cfg.get('url',   None)
+    pretrained_drive= pretrained_cfg.get('drive', None)
 
     if pretrained_file:
         logger.info(
@@ -47,8 +47,8 @@ def load_pretrained(model, variant, pretrained_cfg, state_key=None, replace=None
         logger.info(
             f'Loading pretrained weights from google drive ({pretrained_drive})')
 
-        #
-        save_folder = "pretrained_drive"
+        # name hub folder
+        save_folder = "hub"
         save_path = save_folder + "/" + variant + ".pth"
 
         # create fodler

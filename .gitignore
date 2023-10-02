@@ -6,6 +6,11 @@ __pycache__/
 # C extensions
 *.so
 
+# local folder and files
+hub
+pretrained_drive
+*.onnx
+
 # Distribution / packaging
 .Python
 build/
