@@ -27,6 +27,6 @@ def init_loguru(name="VisLoc", log_file=None, file_name=None):
     # You can add additional sinks for logging, such as console output
     logger.add(sys.stderr, format=logger_format, colorize=True)
 
-    logger.success("init logger")
+    logger.success("Init logger")
 
     return logger
