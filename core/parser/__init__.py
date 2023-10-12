@@ -1,6 +1,7 @@
 
-from .types import size_list # noqa
+from .types import int_list, float_list
 
 __all__ = [ 
-    size_list
+    'int_list',
+    'float_list'
 ]
