@@ -12,3 +12,4 @@ tabulate
 termcolor  
 torchinfo
 tqdm
+ruff

@@ -1,14 +1,30 @@
-import os
+from datetime import datetime
+from loguru import logger
+from pathlib import Path
 import sys
 
-from loguru import logger
+def get_current_time_as_string():
+    """Returns the current time formatted as a string suitable for filenames."""
+    return datetime.now().strftime("%Y%m%d_%H%M%S")
 
+def init_loguru(name="app", log_dir=None):
+    """
+    Initialize and configure the Loguru logger with automatic file naming based on the current time.
 
-def init_loguru(name="VisLoc", log_file=None, file_name=None):
+    Parameters:
+    - name (str): Name of the application or logger.
+    - log_dir (str or Path): Directory path for log files.
 
-    # log file
-    if file_name:
-        log_file = os.path.join(log_file, file_name + ".log")
+    Returns:
+    - logger: Configured logger instance.
+    """
+    if log_dir:
+        log_dir = Path(log_dir)  # Convert log_dir to a Path object if it's not already one
+        log_dir.mkdir(parents=True, exist_ok=True)  # Create directory if it doesn't exist
+        file_name = f"{get_current_time_as_string()}.log"
+        log_file = log_dir / file_name
+    else:
+        log_file = None  # Disable file logging if directory is not specified
 
     logger_format = (
         "<g>{time:YYYY-MM-DD HH:mm}</g>|"
@@ -17,16 +33,11 @@ def init_loguru(name="VisLoc", log_file=None, file_name=None):
         "<c>{function}</c>:<c>{line}</c>|"
         "{extra[ip]} {extra[user]} <level>{message}</level>")
 
-    # ip and user
-    logger.configure(extra={"ip": "", "user": ""})  # Default values
+    logger.configure(extra={"ip": "N/A", "user": "N/A"})
+    logger.remove()  # Clear existing configurations
+    if log_file:
+        logger.add(str(log_file), enqueue=True)  # Add file sink
+    logger.add(sys.stderr, format=logger_format, colorize=True)  # Add console sink
 
-    # Remove the default logger configuration
-    logger.remove()
-    logger.add(log_file, enqueue=True) 
-
-    # You can add additional sinks for logging, such as console output
-    logger.add(sys.stderr, format=logger_format, colorize=True)
-
-    logger.success("Init logger")
-
+    logger.success("Logger initialized with file: " + (str(file_name) if log_dir else "No file logging"))
     return logger

@@ -1,26 +1,38 @@
-
-
 from tqdm import tqdm
+from rich.progress import Progress, BarColumn, TextColumn, TimeRemainingColumn
 
 
-def tqdm_progress(iterable, desc=None, total=None, colour="white", smoothing=1.0, bar_format=None):
-    """write universal tqrdm progress bar and return the progress bar object    
-    """
+def tqdm_progress_bar(iterable, desc="Progress", total=None, colour="white"):
+    if total is None:
+        try:
+            total = len(iterable)
+        except TypeError:
+            total = None
 
-    if not desc:
-        desc = "progress"
-    if not total:
-        total = len(iterable)
-    if not bar_format:
-        bar_format = "{desc}: {percentage:3.0f}%|{bar}|{n_fmt}/{total_fmt} [{elapsed}<{remaining}, {rate_fmt}{postfix}]"
+    return tqdm(iterable, desc=desc, total=total, colour=colour)
 
-    progress_bar = tqdm(
-        iterable=iterable,
-        desc=desc,
-        total=total,
-        colour=colour,
-        smoothing=smoothing,
-        bar_format=bar_format,
+
+def rich_progress_bar(iterable, desc="Progress", total=None, color="white"):
+    progress = Progress(
+        TextColumn(f"[bold {color}]{desc}"),
+        BarColumn(bar_width=None, style=color),
+        "[progress.percentage]{task.percentage:>3.1f}%",
+        TimeRemainingColumn(),
+        expand=True
     )
 
-    return progress_bar
+    if total is None:
+        try:
+            total = len(iterable)
+        except TypeError:
+            total = None
+
+    task_id = progress.add_task(desc, total=total)
+
+    def progress_generator():
+        with progress:
+            for item in iterable:
+                yield item
+                progress.update(task_id, advance=1)
+
+    return progress_generator()
