@@ -87,8 +87,6 @@ def load_image(image_path,
     scale = np.array(
         [original_size[0]/w_new, original_size[1]/h_new], dtype=np.float32)
 
-    cv_img = cv_img.astype(np.float32)
-
     return cv_img, mask, scale, original_size
 
 

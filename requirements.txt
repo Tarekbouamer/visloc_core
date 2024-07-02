@@ -4,7 +4,6 @@ h5py
 joblib
 loguru
 matplotlib
-numpy
 omegaconf
 pylint
 scipy
